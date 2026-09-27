@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>HIMANSHU BHAI — VIP Predictor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+:root{
+  --p1:#38bdf8;--p2:#7dd3fc;
+  --p1r:56;--p1g:189;--p1b:248;
+  --p2r:125;--p2g:211;--p2b:252;
+  --bg-top:#183c66;--bg-mid:#08111f;
+}
+body{
+  font-family:'Inter',sans-serif;font-weight:800;
+  background:radial-gradient(circle at top,var(--bg-top) 0%,var(--bg-mid) 45%,#01040b 100%);
+  color:#fff;min-height:100vh;overflow-x:hidden;display:flex;justify-content:center;
+}
+body::before{content:'';position:fixed;width:450px;height:450px;background:rgba(var(--p1r),var(--p1g),var(--p1b),.08);filter:blur(120px);top:-100px;left:-100px;z-index:0;pointer-events:none}
+body::after{content:'';position:fixed;width:380px;height:380px;background:rgba(var(--p1r),var(--p1g),var(--p1b),.06);filter:blur(120px);bottom:-120px;right:-120px;z-index:0;pointer-events:none}
+#root{width:100%;max-width:430px;display:flex;flex-direction:column;min-height:100vh;position:relative;z-index:1}
+
+/* ── KEYFRAMES ── */
+@keyframes ringPulse{0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.04)}}
+@keyframes blink{50%{opacity:.2}}
+@keyframes fadeSlideUp{0%{opacity:0;transform:translateY(28px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes fadeSlideDown{0%{opacity:0;transform:translateY(-24px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes iconPulse{0%,100%{box-shadow:0 0 40px rgba(var(--p1r),var(--p1g),var(--p1b),.25),inset 0 1px 0 rgba(255,255,255,.08)}50%{box-shadow:0 0 70px rgba(var(--p1r),var(--p1g),var(--p1b),.45),inset 0 1px 0 rgba(255,255,255,.12)}}
+@keyframes orbFloat{0%,100%{transform:translateY(0) translateX(-50%)}50%{transform:translateY(-20px) translateX(-50%)}}
+@keyframes orbFloatR{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+@keyframes shineSlide{0%,100%{opacity:0;left:10%}50%{opacity:1;left:80%}}
+@keyframes spinRing{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes overlayFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes overlayFadeOut{from{opacity:1}to{opacity:0}}
+@keyframes popupBounce{0%{transform:scale(.6) translateY(40px);opacity:0}100%{transform:scale(1) translateY(0);opacity:1}}
+@keyframes popupShrink{to{transform:scale(.85) translateY(20px);opacity:0}}
+@keyframes iconDrop{0%{transform:scale(0) rotate(-20deg);opacity:0}100%{transform:scale(1) rotate(0deg);opacity:1}}
+@keyframes timerDrain{from{width:100%}to{width:0}}
+@keyframes particleFall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(400px) rotate(720deg);opacity:0}}
+
+/* ══ LOGIN SCREEN v2 ══ */
+.ls2-screen{width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px 32px;position:relative;overflow:hidden;background:linear-gradient(175deg,var(--bg-top) 0%,var(--bg-mid) 100%)}
+.ls2-bg-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(var(--p1r),var(--p1g),var(--p1b),.04) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--p1r),var(--p1g),var(--p1b),.04) 1px,transparent 1px);background-size:40px 40px;-webkit-mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent);mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent)}
+.ls2-orb{position:absolute;border-radius:50%;pointer-events:none;filter:blur(60px)}
+.ls2-orb-1{width:320px;height:320px;top:-80px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(var(--p1r),var(--p1g),var(--p1b),.22),transparent 70%);animation:orbFloat 7s ease-in-out infinite}
+.ls2-orb-2{width:180px;height:180px;bottom:60px;left:-30px;background:radial-gradient(circle,rgba(var(--p1r),var(--p1g),var(--p1b),.14),transparent 70%);animation:orbFloatR 9s ease-in-out infinite 1s}
+.ls2-orb-3{width:140px;height:140px;bottom:80px;right:-20px;background:radial-gradient(circle,rgba(var(--p2r),var(--p2g),var(--p2b),.12),transparent 70%);animation:orbFloat 8s ease-in-out infinite 3s}
+.ls2-header{width:100%;display:flex;flex-direction:column;align-items:center;margin-bottom:24px;position:relative;z-index:1;animation:fadeSlideDown .55s cubic-bezier(.4,0,.2,1) both}
+.ls2-badge-row{display:flex;gap:10px;margin-bottom:22px}
+.ls2-badge{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.22);font-size:9px;font-weight:900;letter-spacing:2px;color:#00ff88}
+.ls2-badge-vip{background:rgba(var(--p1r),var(--p1g),var(--p1b),.1);border-color:rgba(var(--p1r),var(--p1g),var(--p1b),.3);color:var(--p1)}
+.ls2-badge-dot{width:7px;height:7px;border-radius:50%;background:#00ff88;box-shadow:0 0 8px #00ff88;animation:blink 1s infinite;flex-shrink:0}
+.ls2-logo{display:flex;align-items:center;gap:16px;margin-bottom:12px}
+.ls2-logo-hex{width:62px;height:62px;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;filter:drop-shadow(0 0 18px rgba(var(--p1r),var(--p1g),var(--p1b),.6));animation:iconPulse 3s ease-in-out infinite}
+.ls2-logo-text{display:flex;flex-direction:column}
+.ls2-name{font-size:26px;font-weight:900;letter-spacing:2px;line-height:1;background:linear-gradient(135deg,#fff 0%,var(--p2) 50%,var(--p1) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:5px}
+.ls2-dev{font-size:10px;font-weight:700;letter-spacing:1px;color:rgba(var(--p1r),var(--p1g),var(--p1b),.6)}
+.ls2-tagline{font-size:9px;font-weight:900;letter-spacing:3.5px;color:rgba(var(--p1r),var(--p1g),var(--p1b),.4)}
+.ls2-card{width:100%;position:relative;z-index:1;background:linear-gradient(160deg,rgba(6,12,24,.97),rgba(2,5,12,.99));border:1px solid rgba(var(--p1r),var(--p1g),var(--p1b),.18);border-radius:28px;padding:0 0 22px;box-shadow:0 0 0 1px rgba(255,255,255,.03) inset,0 0 80px rgba(var(--p1r),var(--p1g),var(--p1b),.1),0 40px 80px rgba(0,0,0,.9);overflow:hidden;animation:fadeSlideUp .55s .15s cubic-bezier(.4,0,.2,1) both}
+.ls2-card-top-bar{width:100%;height:3px;background:linear-gradient(90deg,transparent,var(--p1),var(--p2),var(--p1),transparent);margin-bottom:20px}
+.ls2-stats-row{display:flex;align-items:center;justify-content:center;padding:0 20px;margin-bottom:18px}
+.ls2-stat{flex:1;text-align:center}
+.ls2-stat-val{font-size:20px;font-weight:900;letter-spacing:1px;background:linear-gradient(135deg,var(--p1),var(--p2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:4px}
+.ls2-stat-lbl{font-size:8px;font-weight:900;letter-spacing:2px;color:rgba(255,255,255,.3)}
+.ls2-stat-div{width:1px;height:36px;background:rgba(var(--p1r),var(--p1g),var(--p1b),.15);margin:0 10px}
+.ls2-divider{height:1px;margin:0 20px 20px;background:linear-gradient(90deg,transparent,rgba(var(--p1r),var(--p1g),var(--p1b),.2),transparent)}
+.ls2-device-section{padding:0 18px;margin-bottom:18px}
+.ls2-device-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.ls2-device-icon{width:26px;height:26px;border-radius:8px;background:rgba(var(--p1r),var(--p1g),var(--p1b),.12);border:1px solid rgba(var(--p1r),var(--p1g),var(--p1b),.25);display:flex;align-items:center;justify-content:center;color:var(--p1);flex-shrink:0}
+.ls2-device-title{font-size:10px;font-weight:900;letter-spacing:3px;color:rgba(255,255,255,.5);flex:1}
+.ls2-secure-pill{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:999px;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.2);font-size:8px;font-weight:900;letter-spacing:1.5px;color:#00ff88}
+.ls2-device-id-box{display:flex;align-items:center;gap:10px;background:rgba(var(--p1r),var(--p1g),var(--p1b),.06);border:1px solid rgba(var(--p1r),var(--p1g),var(--p1b),.18);border-radius:16px;padding:14px}
+.ls2-device-id{flex:1;font-size:13px;font-weight:900;letter-spacing:2px;color:#fff;font-family:monospace;word-break:break-all;text-shadow:0 0 14px rgba(var(--p1r),var(--p1g),var(--p1b),.5)}
+.ls2-copy-btn{width:34px;height:34px;border-radius:10px;flex-shrink:0;background:rgba(var(--p1r),var(--p1g),var(--p1b),.15);border:1px solid rgba(var(--p1r),var(--p1g),var(--p1b),.3);color:var(--p1);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.ls2-copy-btn:active{transform:scale(.92)}
+.ls2-status{text-align:center;font-size:11px;font-weight:900;letter-spacing:2px;margin-bottom:14px;min-height:20px;padding:0 18px;transition:all .3s}
+.ls2-activate-btn{width:calc(100% - 36px);margin:0 18px 14px;padding:18px;border-radius:18px;border:none;background:linear-gradient(135deg,var(--p1),var(--p2),#fff);font-size:13px;font-weight:900;letter-spacing:3px;color:#020c18;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 0 0 1px rgba(255,255,255,.2) inset,0 8px 30px rgba(var(--p1r),var(--p1g),var(--p1b),.5),0 20px 50px rgba(var(--p1r),var(--p1g),var(--p1b),.2);transition:all .2s;overflow:hidden;position:relative}
+.ls2-activate-btn:active{transform:scale(.97)}
+.ls2-activate-btn:disabled{opacity:.6;cursor:not-allowed}
+.ls2-spinner{width:16px;height:16px;border-radius:50%;border:2px solid rgba(2,12,24,.3);border-top-color:#020c18;animation:spin 0.7s linear infinite}
+.ls2-tg-btn{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 18px;padding:14px;background:rgba(var(--p1r),var(--p1g),var(--p1b),.07);border:1px solid rgba(var(--p1r),var(--p1g),var(--p1b),.18);border-radius:16px;font-size:10px;font-weight:900;letter-spacing:1.5px;color:rgba(var(--p1r),var(--p1g),var(--p1b),.7);text-decoration:none;transition:all .2s}
+.ls2-tg-btn:active{background:rgba(var(--p1r),var(--p1g),var(--p1b),.14);transform:scale(.98)}
+.ls2-footer{margin-top:18px;font-size:8px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,.15);text-align:center;position:relative;z-index:1}
+
+/* ══ MAIN UI ══ */
+.ui-wrapper{width:100%;padding:16px 14px 90px;flex:1}
+
+/* ══ HOME v2 ══ */
+.hv2-wrap{display:flex;flex-direction:column}
+.hv2-topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.hv2-topbar-left{display:flex;flex-direction:column}
+.hv2-brand{font-size:22px;font-weight:900;letter-spacing:2px;background:linear-gradient(135deg,#fff,var(--p2),var(--p1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.hv2-sub{font-size:9px;font-weight:900;letter-spacing:2.5px;color:rgba(var(--p1r),var(--p1g),var(--p1b),.45);margin-top:3px}
+.hv2-live-pill{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.22);font-size:10px;font-weight:900;letter-spacing:2px;color:#00ff88}
+.live-dot-g{width:7px;height:7px;border-radius:50%;background:#00ff88;box-shadow:0 0 8px #00ff88;animation:blink 1s infinite;flex-shrink:0}
+.hv2-info-row{display:flex;align-items:stretch;background:linear-gradient(135deg,rgba(var(--p1r),var(--p1g),var(--p1b),.07),rgba(var(--p1r),var(--p1g),var(--p1b),.02));border:1px solid rgba(var(--p1r),var(--p1g),var(--p1b),.15);border-radius:20px;padding:14px 18px;margin-bottom:14px}
+.hv2-info-box{flex:1;display:flex;flex-direction:column}
+.hv2-info-box-right{align-items:flex-end}
+.hv2-info-lbl{display:flex;align-items:center;gap:5px;font-size:8px;font-weight:900;letter-spacing:2px;color:rgba(var(--p1r),var(--p1g),var(--p1b),.5);margin-bottom:6px}
+.hv2-info-val{font-size:20px;font-weight:900;letter-spacing:1px;color:#fff}
+.hv2-timer{font-variant-numeric:tabular-nums;color:var(--p1);text-shadow:0 0 16px rgba(var(--p1r),var(--p1g),var(--p1b),.6)}
+.hv2-info-sep{width:1px;background:rgba(var(--p1r),var(--p1g),var(--p1b),.15);margin:0 18px}
+.hv2-pred-card{position:relative;background:linear-gradient(150deg,rgba(6,14,28,.98),rgba(2,5,12,.99));border:1px solid rgba(var(--p1r),var(--p1g),var(--p1b),.2);border-radius:28px;overflow:hidden;margin-bottom:12px;box-shadow:0 0 60px rgba(var(--p1r),var(--p1g),var(--p1b),.1),0 30px 70px rgba(0,0,0,.8)}
+.hv2-pred-glow{position:absolute;width:280px;height:280px;border-radius:50%;top:-100px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(var(--p1r),var(--p1g),var(--p1b),.18) 0%,transparent 70%);pointer-events:none}
+.hv2-pred-top-strip{height:3px;background:linear-gradient(90deg,transparent,var(--p1),var(--p2),var(--p1),transparent)}
+.hv2-mode-row{display:flex;align-items:center;gap:8px;padding:14px 20px 0}
+.hv2-mode-dot{width:8px;height:8px;border-radius:50%;background:var(--p1);box-shadow:0 0 10px rgba(var(--p1r),var(--p1g),var(--p1b),.8);animation:blink 1.4s infinite;flex-shrink:0}
+.hv2-mode-text{font-size:9px;font-weight:900;letter-spacing:2px;color:rgba(var(--p1r),var(--p1g),var(--p1b),.6)}
+.hv2-pred-body{display:flex;align-items:center;padding:16px 22px;gap:0}
+.hv2-pred-left{flex:1;display:flex;flex-direction:column}
+.hv2-pred-signal-lbl{font-size:8px;font-weight:900;letter-spacing:3px;color:rgba(255,255,255,.3);margin-bottom:8px}
+.hv2-pred-result{font-size:42px;font-weight:900;letter-spacing:2px;line-height:1;background:linear-gradient(135deg,#fff,var(--p2),var(--p1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 20px rgba(var(--p1r),var(--p1g),var(--p1b),.5));margin-bottom:10px}
+.hv2-pred-period-badge{display:inline-flex;padding:5px 12px;border-radius:999px;background:rgba(var(--p1r),var(--p1g),var(--p1b),.08);border:1px solid rgba(var(--p1r),var(--p1g),var(--p1b),.2);font-size:9px;font-weight:900;letter-spacing:2px;color:rgba(var(--p1r),var(--p1g),var(--p1b),.6)}
+.hv2-pred-divline{width:1px;background:linear-gradient(to bottom,transparent,rgba(var(--p1r),var(--p1g),var(--p1b),.25),transparent);margin:0 20px;height:90px;align-self:center}
+.hv2-pred-right{display:flex;flex-direction:column;align-items:center}
+.hv2-pred-ball{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:900;background:rgba(var(--p1r),var(--p1g),var(--p1b),.1);border:2px solid rgba(var(--p1r),var(--p1g),var(--p1b),.4);box-shadow:0 0 30px rgba(var(--p1r),var(--p1g),var(--p1b),.3),inset 0 1px 0 rgba(255,255,255,.1);color:var(--p1);animation:iconPulse 3s ease-in-out infinite;margin:6px 0;text-shadow:0 0 20px rgba(var(--p1r),var(--p1g),var(--p1b),.8)}
+.hv2-pred-size-hint{font-size:10px;font-weight:900;letter-spacing:2px;color:rgba(var(--p1r),var(--p1g),var(--p1b),.5)}
+.hv2-conf-strip{height:4px;background:rgba(255,255,255,.06);margin:0 20px;border-radius:999px;overflow:hidden}
+.hv2-conf-strip-inner{height:100%;border-radius:999px;transition:width .8s cubic-bezier(.4,0,.2,1);box-shadow:0 0 10px currentColor}
+.hv2-conf-label-row{display:flex;justify-content:space-between;padding:8px 20px 16px}
+.hv2-zones-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.hv2-zone{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:12px 10px 10px;display:flex;flex-direction:column;align-items:center;gap:5px;position:relative;overflow:hidden;transition:all .3s}
+.hv2-zone-bar{position:absolute;top:0;left:0;right:0;height:2px;background:rgba(255,255,255,.1);transition:background .3s}
+.hv2-zone-name{font-size:9px;font-weight:900;letter-spacing:1.5px;color:rgba(255,255,255,.4)}
+.hv2-zone-pct{font-size:8px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.2)}
+.hv2-zone-on-yellow .hv2-zone-name{color:#fbbf24}
+.hv2-zone-on-blue .hv2-zone-name{color:var(--p1)}
+.hv2-zone-on-green .hv2-zone-name{color:#00ff88}
+.hv2-trend-card{background:linear-gradient(145deg,rgba(8,16,32,.97),rgba(3,6,15,.99));border:1px solid rgba(var(--p2r),var(--p2g),var(--p2b),.14);border-radius:24px;padding:18px 16px;margin-bottom:16px;box-shadow:0 20px 50px rgba(0,0,0,.6)}
+.hv2-trend-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.hv2-trend-title{display:flex;align-items:center;font-size:11px;font-weight:900;letter-spacing:2px;color:var(--p1)}
+.hv2-trend-time{font-size:9px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.25);font-variant-numeric:tabular-nums}
+.hv2-trend-section-lbl{font-size:8px;font-weight:900;letter-spacing:3px;color:rgba(255,255,255,.25);margin-bottom:8px}
+.hv2-bubbles{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
+.hv2-bubble{width:28px;height:28px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900}
+.hv2-bubble-b{background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.3);color:#60a5fa}
+.hv2-bubble-s{background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.3);color:#f87171}
+.hv2-ratio-bar{height:6px;border-radius:999px;overflow:hidden;display:flex;margin-bottom:5px}
+.hv2-ratio-big{background:linear-gradient(90deg,#3b82f6,#60a5fa);height:100%}
+.hv2-ratio-small{background:linear-gradient(90deg,#ef4444,#f87171);height:100%}
+.hv2-ratio-labels{display:flex;justify-content:space-between;font-size:9px;font-weight:900;letter-spacing:1px;margin-bottom:12px}
+.hv2-trend-stats{display:flex;align-items:center;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:12px 16px;margin-bottom:10px}
+.hv2-tstat{flex:1}
+.hv2-tstat-lbl{font-size:8px;font-weight:900;letter-spacing:2px;color:rgba(255,255,255,.25);margin-bottom:4px}
+.hv2-tstat-val{font-size:14px;font-weight:900;letter-spacing:1px}
+.hv2-tstat-sep{width:1px;height:36px;background:rgba(255,255,255,.08);margin:0 16px}
+.hv2-insight{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:rgba(var(--p1r),var(--p1g),var(--p1b),.06);border:1px solid rgba(var(--p1r),var(--p1g),var(--p1b),.15);border-radius:12px;font-size:11px;font-weight:600;color:rgba(255,255,255,.55);line-height:1.4}
+
+/* ══ HISTORY v2 ══ */
+.hisv2-wrap{display:flex;flex-direction:column}
+.hisv2-session-badge{padding:7px 13px;border-radius:12px;background:rgba(var(--p1r),var(--p1g),var(--p1b),.08);border:1px solid rgba(var(--p1r),var(--p1g),var(--p1b),.2);font-size:10px;font-weight:900;letter-spacing:2px;color:var(--p1)}
+.hisv2-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.hisv2-stat-card{border-radius:20px;padding:16px 10px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.hisv2-stat-win{background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2)}
+.hisv2-stat-loss{background:rgba(255,43,85,.06);border:1px solid rgba(255,43,85,.2)}
+.hisv2-stat-jackpot{background:rgba(var(--p1r),var(--p1g),var(--p1b),.08);border:1px solid rgba(var(--p1r),var(--p1g),var(--p1b),.25)}
+.hisv2-stat-icon{font-size:20px;line-height:1}
+.hisv2-stat-num{font-size:28px;font-weight:900;line-height:1}
+.hisv2-stat-win .hisv2-stat-num{color:#00ff88;text-shadow:0 0 16px rgba(0,255,136,.5)}
+.hisv2-stat-loss .hisv2-stat-num{color:#ff2b55;text-shadow:0 0 16px rgba(255,43,85,.5)}
+.hisv2-stat-jackpot .hisv2-stat-num{color:var(--p1);text-shadow:0 0 16px rgba(var(--p1r),var(--p1g),var(--p1b),.5)}
+.hisv2-stat-lbl{font-size:8px;font-weight:900;letter-spacing:2px;color:rgba(255,255,255,.3)}
+.hisv2-wr-card{background:linear-gradient(150deg,rgba(6,14,28,.98),rgba(2,5,12,.99));border:1px solid rgba(var(--p1r),var(--p1g),var(--p1b),.18);border-radius:24px;overflow:hidden;margin-bottom:14px;box-shadow:0 20px 50px rgba(0,0,0,.7)}
+.hisv2-wr-top-bar{height:3px}
+.hisv2-wr-body{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 12px}
+.hisv2-wr-lbl{font-size:9px;font-weight:900;letter-spacing:3px;color:rgba(255,255,255,.3);margin-bottom:6px}
+.hisv2-wr-pct{font-size:44px;font-weight:900;line-height:1;margin-bottom:6px}
+.hisv2-wr-meta{font-size:10px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.25)}
+.hisv2-wr-bar-bg{height:4px;background:rgba(255,255,255,.06);margin:0 20px 16px;border-radius:999px;overflow:hidden}
+.hisv2-wr-bar-fill{height:100%;border-radius:999px;transition:width .8s cubic-bezier(.4,0,.2,1);box-shadow:0 0 12px currentColor}
+.hisv2-list-card{background:linear-gradient(150deg,rgba(6,14,28,.97),rgba(2,5,12,.99));border:1px solid rgba(var(--p1r),var(--p1g),var(--p1b),.14);border-radius:24px;padding:18px 16px;margin-bottom:16px}
+.hisv2-list-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.hisv2-list-title{display:flex;align-items:center;font-size:11px;font-weight:900;letter-spacing:2px;color:var(--p1)}
+.hisv2-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;color:rgba(255,255,255,.2);font-size:11px;font-weight:900;letter-spacing:2px}
+.hisv2-rows{display:flex;flex-direction:column;gap:6px}
+.hisv2-row-head{display:grid;grid-template-columns:1fr 0.6fr 1fr 1fr;gap:8px;padding:8px 12px;font-size:8px;font-weight:900;letter-spacing:2px;color:rgba(255,255,255,.25)}
+.hisv2-row{display:grid;grid-template-columns:1fr 0.6fr 1fr 1fr;gap:8px;padding:10px 12px;border-radius:14px;align-items:center}
+.row-win{background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.12)}
+.row-loss{background:rgba(255,43,85,.05);border:1px solid rgba(255,43,85,.12)}
+.row-jackpot{background:rgba(var(--p1r),var(--p1g),var(--p1b),.07);border:1px solid rgba(var(--p1r),var(--p1g),var(--p1b),.2)}
+.hisv2-cell-period{font-size:11px;font-weight:900;letter-spacing:1px;color:rgba(255,255,255,.5)}
+.hisv2-cell-num{font-size:14px;font-weight:900;color:#fff;text-align:center}
+.hisv2-cell-pred{font-size:11px;font-weight:900;letter-spacing:1px;color:rgba(255,255,255,.6)}
+.hisv2-cell-status{display:flex;align-items:center}
+.htag{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:8px;font-size:9px;font-weight:900;letter-spacing:1px}
+.htag-win{background:rgba(0,255,136,.12);color:#00ff88}
+.htag-loss{background:rgba(255,43,85,.12);color:#ff2b55}
+.htag-jackpot{background:rgba(var(--p1r),var(--p1g),var(--p1b),.15);color:var(--p1)}
+
+/* ══ PROFILE ══ */
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.brand-title{font-size:26px;font-weight:900;background:linear-gradient(135deg,#fff,var(--p2),var(--p1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.online-badge{padding:7px 13px;border-radius:12px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.18);font-size:11px;font-weight:900;color:#4ade80;display:flex;align-items:center;gap:6px}
+.profile-card{background:linear-gradient(145deg,#111c31,#070c17);border-radius:34px;padding:30px 20px;margin-bottom:16px;border:1px solid rgba(var(--p2r),var(--p2g),var(--p2b),.1);box-shadow:0 25px 60px rgba(0,0,0,.75),0 0 40px rgba(var(--p1r),var(--p1g),var(--p1b),.08);display:flex;flex-direction:column;align-items:center;gap:12px}
+.profile-avatar-ring{padding:3px;border-radius:50%;background:linear-gradient(135deg,#f87171,#ef4444,#fb923c);box-shadow:0 0 20px rgba(248,113,113,.5)}
+.profile-avatar{width:84px;height:84px;border-radius:50%;background:linear-gradient(145deg,rgba(var(--p1r),var(--p1g),var(--p1b),.15),rgba(var(--p1r),var(--p1g),var(--p1b),.05));border:2.5px solid #0a111e;display:flex;justify-content:center;align-items:center;overflow:hidden}
+.profile-name{font-size:20px;font-weight:900;letter-spacing:2px;background:linear-gradient(135deg,#fff,var(--p2),var(--p1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.profile-badge{padding:7px 16px;border-radius:999px;background:rgba(var(--p1r),var(--p1g),var(--p1b),.1);border:1px solid rgba(var(--p1r),var(--p1g),var(--p1b),.25);font-size:11px;font-weight:900;letter-spacing:3px;color:var(--p1)}
+.profile-section-card{background:rgba(9,16,30,.95);border-radius:24px;padding:20px;margin-bottom:14px;border:1px solid rgba(var(--p2r),var(--p2g),var(--p2b),.08);display:flex;flex-direction:column;gap:14px}
+.profile-section-title{font-size:11px;font-weight:900;letter-spacing:3px;color:#8eb9d2}
+.profile-device-id{font-size:13px;font-weight:900;word-break:break-all;color:#fff;letter-spacing:1px;font-family:monospace}
+.profile-copy-btn{border:none;cursor:pointer;font-family:inherit;padding:12px 22px;border-radius:16px;background:linear-gradient(135deg,var(--p2),var(--p1));font-size:13px;font-weight:900;color:#03111f;align-self:flex-start;transition:opacity .2s}
+.profile-info-row{display:flex;align-items:center;gap:12px}
+.profile-info-icon{width:38px;height:38px;border-radius:12px;background:rgba(var(--p1r),var(--p1g),var(--p1b),.1);border:1px solid rgba(var(--p1r),var(--p1g),var(--p1b),.2);display:flex;justify-content:center;align-items:center;color:var(--p1);flex-shrink:0}
+.profile-info-text{font-size:15px;font-weight:900;color:#fff;letter-spacing:1px}
+.profile-channel-btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:16px;border-radius:20px;background:linear-gradient(135deg,var(--p1),var(--p2));font-size:13px;font-weight:900;letter-spacing:1px;color:#02111e;text-decoration:none;box-shadow:0 12px 30px rgba(var(--p1r),var(--p1g),var(--p1b),.35)}
+
+/* ══ BOTTOM NAV ══ */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;display:flex;justify-content:space-around;align-items:center;padding:10px 10px 14px;background:rgba(4,10,20,.97);backdrop-filter:blur(30px);border-top:1px solid rgba(var(--p2r),var(--p2g),var(--p2b),.1);z-index:99999}
+.nav-item{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;padding:8px 2px;border-radius:16px;font-size:9px;font-weight:900;color:#7d8ca1;cursor:pointer;transition:background .2s,color .2s;letter-spacing:.5px;user-select:none}
+.nav-item svg{width:20px;height:20px;fill:currentColor}
+.active-nav{background:linear-gradient(135deg,rgba(var(--p1r),var(--p1g),var(--p1b),.18),rgba(var(--p1r),var(--p1g),var(--p1b),.08));color:var(--p1)}
+.theme-nav-btn{flex:0 0 44px;display:flex;justify-content:center;align-items:center;padding:10px 4px;border-radius:18px;cursor:pointer;color:#7d8ca1}
+.theme-ring{width:26px;height:26px;border-radius:50%;border:2.5px solid rgba(var(--p1r),var(--p1g),var(--p1b),.6);background:conic-gradient(#38bdf8 0deg 45deg,#f87171 45deg 90deg,#4ade80 90deg 135deg,#c084fc 135deg 180deg,#fb923c 180deg 225deg,#fbbf24 225deg 270deg,#f472b6 270deg 315deg,#22d3ee 315deg 360deg);animation:spinRing 4s linear infinite;box-shadow:0 0 12px rgba(var(--p1r),var(--p1g),var(--p1b),.4)}
+
+/* ══ GAME ══ */
+.game-frame-container{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;padding-bottom:80px}
+.game-frame-container iframe{width:100%;height:100%;border:none;flex:1}
+
+/* ══ THEME DRAWER ══ */
+.theme-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199998}
+.theme-overlay.open{display:block}
+.theme-drawer{position:fixed;bottom:-100%;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(5,10,20,.98);border-top:1px solid rgba(var(--p2r),var(--p2g),var(--p2b),.15);border-radius:32px 32px 0 0;padding:24px 20px 100px;z-index:199999;transition:bottom .35s cubic-bezier(.4,0,.2,1);backdrop-filter:blur(40px);box-shadow:0 -30px 80px rgba(0,0,0,.8)}
+.theme-drawer.open{bottom:0}
+.drawer-handle{width:40px;height:4px;border-radius:999px;background:rgba(255,255,255,.15);margin:0 auto 20px}
+.drawer-title{text-align:center;font-size:13px;font-weight:900;letter-spacing:4px;color:#8eb9d2;margin-bottom:22px}
+.theme-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.theme-swatch{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer}
+.swatch-circle{width:54px;height:54px;border-radius:50%;border:3px solid transparent;transition:transform .2s,border-color .2s;position:relative}
+.swatch-circle.active{border-color:#fff;transform:scale(1.12)}
+.swatch-circle::after{content:'✓';position:absolute;inset:0;display:flex;justify-content:center;align-items:center;font-size:20px;font-weight:900;color:#fff;opacity:0;transition:opacity .2s}
+.swatch-circle.active::after{opacity:1}
+.swatch-label{font-size:10px;font-weight:900;letter-spacing:1px;color:#7d8ca1}
+.swatch-label.active{color:#fff}
+
+/* ══ WIN/LOSS/JACKPOT POPUP ══ */
+.result-popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);animation:overlayFadeIn .25s ease both}
+.result-popup-overlay.hiding{animation:overlayFadeOut .3s ease forwards}
+.result-popup{width:calc(100% - 60px);max-width:310px;border-radius:24px;padding:20px 18px 18px;position:relative;overflow:hidden;animation:popupBounce .4s cubic-bezier(.34,1.56,.64,1) both}
+.result-popup.hiding{animation:popupShrink .25s ease forwards}
+.popup-win{background:linear-gradient(160deg,rgba(2,6,14,.98),rgba(1,3,8,.99));border:1.5px solid rgba(var(--p1r),var(--p1g),var(--p1b),.3);box-shadow:0 0 80px rgba(var(--p1r),var(--p1g),var(--p1b),.22),0 40px 80px rgba(0,0,0,.9),inset 0 1px 0 rgba(var(--p1r),var(--p1g),var(--p1b),.12)}
+.popup-win .popup-glow{background:radial-gradient(circle,rgba(var(--p1r),var(--p1g),var(--p1b),.16) 0%,transparent 70%)}
+.popup-loss{background:linear-gradient(160deg,rgba(12,0,4,.98),rgba(6,0,2,.99));border:1.5px solid rgba(255,43,85,.25);box-shadow:0 0 80px rgba(255,43,85,.2),0 40px 80px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,43,85,.1)}
+.popup-loss .popup-glow{background:radial-gradient(circle,rgba(255,43,85,.12) 0%,transparent 70%)}
+.popup-jackpot{background:linear-gradient(160deg,rgba(2,6,14,.98),rgba(1,3,8,.99));border:1.5px solid rgba(var(--p1r),var(--p1g),var(--p1b),.4);box-shadow:0 0 80px rgba(var(--p1r),var(--p1g),var(--p1b),.3),0 40px 80px rgba(0,0,0,.9),inset 0 1px 0 rgba(var(--p1r),var(--p1g),var(--p1b),.15)}
+.popup-jackpot .popup-glow{background:radial-gradient(circle,rgba(var(--p1r),var(--p1g),var(--p1b),.2) 0%,transparent 70%)}
+.popup-glow{position:absolute;width:300px;height:300px;border-radius:50%;top:-100px;left:50%;transform:translateX(-50%);pointer-events:none}
+.popup-shine{position:absolute;width:1px;height:200%;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.08),transparent);top:0;left:30%;animation:shineSlide 3s ease-in-out infinite;pointer-events:none}
+.popup-period-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);font-size:9px;font-weight:900;letter-spacing:2px;color:rgba(255,255,255,.5);margin-bottom:12px}
+.popup-status-icon{font-size:34px;line-height:1;margin-bottom:4px;animation:iconDrop .4s .1s cubic-bezier(.34,1.56,.64,1) both;display:block;text-align:center}
+.popup-status-text{font-size:30px;font-weight:900;letter-spacing:4px;text-align:center;line-height:1;margin-bottom:4px;animation:fadeSlideUp .4s .2s cubic-bezier(.4,0,.2,1) both}
+.popup-win .popup-status-text{color:var(--p1);text-shadow:0 0 30px rgba(var(--p1r),var(--p1g),var(--p1b),.8)}
+.popup-loss .popup-status-text{color:#ff2b55;text-shadow:0 0 30px rgba(255,43,85,.8)}
+.popup-jackpot .popup-status-text{color:var(--p1);text-shadow:0 0 30px rgba(var(--p1r),var(--p1g),var(--p1b),.9)}
+.popup-subtitle{text-align:center;font-size:10px;font-weight:900;letter-spacing:2px;color:rgba(255,255,255,.35);margin-bottom:14px;animation:fadeSlideUp .4s .25s cubic-bezier(.4,0,.2,1) both}
+.popup-result-row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-bottom:14px;animation:fadeSlideUp .4s .3s cubic-bezier(.4,0,.2,1) both}
+.popup-result-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px 8px;text-align:center}
+.popup-result-box-label{font-size:8px;font-weight:900;letter-spacing:2px;color:rgba(255,255,255,.3);margin-bottom:5px}
+.popup-period-digits{font-size:18px;font-weight:900;letter-spacing:1px;color:#fff}
+.popup-number-ball{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;margin:0 auto}
+.popup-win .popup-number-ball{background:rgba(var(--p1r),var(--p1g),var(--p1b),.1);border:2px solid rgba(var(--p1r),var(--p1g),var(--p1b),.5);box-shadow:0 0 16px rgba(var(--p1r),var(--p1g),var(--p1b),.3);color:var(--p1)}
+.popup-loss .popup-number-ball{background:rgba(255,43,85,.1);border:2px solid rgba(255,43,85,.5);box-shadow:0 0 16px rgba(255,43,85,.3);color:#ff2b55}
+.popup-jackpot .popup-number-ball{background:rgba(var(--p1r),var(--p1g),var(--p1b),.1);border:2px solid rgba(var(--p1r),var(--p1g),var(--p1b),.5);box-shadow:0 0 16px rgba(var(--p1r),var(--p1g),var(--p1b),.3);color:var(--p1)}
+.popup-result-box-val-label{font-size:8px;font-weight:900;letter-spacing:2px;color:rgba(255,255,255,.3);margin-bottom:4px}
+.popup-size-text{font-size:14px;font-weight:900;letter-spacing:2px}
+.popup-win .popup-size-text{color:var(--p1)}
+.popup-loss .popup-size-text{color:#ff2b55}
+.popup-jackpot .popup-size-text{color:var(--p1)}
+.popup-dismiss{width:100%;padding:12px;border-radius:14px;border:none;font-size:11px;font-weight:900;letter-spacing:2px;cursor:pointer;font-family:inherit;transition:all .2s;animation:fadeSlideUp .4s .4s cubic-bezier(.4,0,.2,1) both}
+.popup-win .popup-dismiss{background:linear-gradient(135deg,var(--p1),var(--p2));color:#020c18;box-shadow:0 8px 20px rgba(var(--p1r),var(--p1g),var(--p1b),.35)}
+.popup-loss .popup-dismiss{background:linear-gradient(135deg,#ff2b55,#cc0033);color:#fff;box-shadow:0 8px 20px rgba(255,43,85,.3)}
+.popup-jackpot .popup-dismiss{background:linear-gradient(135deg,var(--p1),var(--p2));color:#020c18;box-shadow:0 8px 20px rgba(var(--p1r),var(--p1g),var(--p1b),.35)}
+.popup-dismiss:active{transform:scale(.97)}
+.popup-timer-bar{width:100%;height:2px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;margin-top:12px}
+.popup-timer-fill{height:100%;border-radius:999px;animation:timerDrain 5s linear forwards}
+.popup-win .popup-timer-fill{background:linear-gradient(90deg,var(--p1),var(--p2))}
+.popup-loss .popup-timer-fill{background:linear-gradient(90deg,#ff2b55,#cc0033)}
+.popup-jackpot .popup-timer-fill{background:linear-gradient(90deg,var(--p1),var(--p2))}
+.popup-particles{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:32px}
+.particle{position:absolute;animation:particleFall linear forwards}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<script>
+// ─── FIREBASE ───
+firebase.initializeApp({
+  apiKey:"AIzaSyB7onLWVIaLRqnaK7r-MC6CDpUT4waxFJw",
+  databaseURL:"https://dmax-77a13-default-rtdb.firebaseio.com",
+  projectId:"dmax-77a13"
+});
+const db = firebase.database();
+
+// ─── THEMES ───
+const THEMES=[
+  {id:"blue",  label:"BLUE",  p1:"#38bdf8",p2:"#7dd3fc",p1r:56, p1g:189,p1b:248,p2r:125,p2g:211,p2b:252,bg:"#183c66",bgm:"#08111f",swatch:"linear-gradient(135deg,#38bdf8,#0ea5e9)"},
+  {id:"red",   label:"RED",   p1:"#f87171",p2:"#fca5a5",p1r:248,p1g:113,p1b:113,p2r:252,p2g:165,p2b:165,bg:"#661818",bgm:"#1f0808",swatch:"linear-gradient(135deg,#f87171,#ef4444)"},
+  {id:"green", label:"GREEN", p1:"#4ade80",p2:"#86efac",p1r:74, p1g:222,p1b:128,p2r:134,p2g:239,p2b:172,bg:"#1a4d1a",bgm:"#081508",swatch:"linear-gradient(135deg,#4ade80,#22c55e)"},
+  {id:"purple",label:"PURPLE",p1:"#c084fc",p2:"#d8b4fe",p1r:192,p1g:132,p1b:252,p2r:216,p2g:180,p2b:254,bg:"#3d1866",bgm:"#130820",swatch:"linear-gradient(135deg,#c084fc,#a855f7)"},
+  {id:"orange",label:"ORANGE",p1:"#fb923c",p2:"#fdba74",p1r:251,p1g:146,p1b:60, p2r:253,p2g:186,p2b:116,bg:"#7c2d12",bgm:"#1c0a05",swatch:"linear-gradient(135deg,#fb923c,#f97316)"},
+  {id:"gold",  label:"GOLD",  p1:"#fbbf24",p2:"#fde68a",p1r:251,p1g:191,p1b:36, p2r:253,p2g:230,p2b:138,bg:"#78350f",bgm:"#1c1005",swatch:"linear-gradient(135deg,#fbbf24,#f59e0b)"},
+  {id:"pink",  label:"PINK",  p1:"#f472b6",p2:"#f9a8d4",p1r:244,p1g:114,p1b:182,p2r:249,p2g:168,p2b:212,bg:"#831843",bgm:"#200815",swatch:"linear-gradient(135deg,#f472b6,#ec4899)"},
+  {id:"cyan",  label:"CYAN",  p1:"#22d3ee",p2:"#67e8f9",p1r:34, p1g:211,p1b:238,p2r:103,p2g:232,p2b:249,bg:"#164e63",bgm:"#051820",swatch:"linear-gradient(135deg,#22d3ee,#06b6d4)"},
+];
+function applyTheme(id){
+  const t=THEMES.find(x=>x.id===id); if(!t)return;
+  const r=document.documentElement.style;
+  r.setProperty("--p1",t.p1);r.setProperty("--p2",t.p2);
+  r.setProperty("--p1r",t.p1r);r.setProperty("--p1g",t.p1g);r.setProperty("--p1b",t.p1b);
+  r.setProperty("--p2r",t.p2r);r.setProperty("--p2g",t.p2g);r.setProperty("--p2b",t.p2b);
+  r.setProperty("--bg-top",t.bg);r.setProperty("--bg-mid",t.bgm);
+  localStorage.setItem("vip_theme",id);
+}
+let currentTheme = localStorage.getItem("vip_theme")||"blue";
+applyTheme(currentTheme);
+
+// ─── DEVICE ID ───
+function getDeviceID(){
+  let id=localStorage.getItem("rexo_device_id");
+  if(!id){
+    const ch="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    id="VIP-";
+    for(let i=0;i<12;i++) id+=ch.charAt(Math.floor(Math.random()*ch.length));
+    localStorage.setItem("rexo_device_id",id);
+  }
+  return id;
+}
+const DEVICE_ID = getDeviceID();
+
+// ─── SAFE COPY ───
+async function safeCopy(text){
+  try{ if(navigator.clipboard&&window.isSecureContext){ await navigator.clipboard.writeText(text); return true; } }catch{}
+  try{
+    const inp=document.createElement("input"); inp.value=text;
+    inp.setAttribute("readonly",""); inp.style.cssText="position:fixed;left:-9999px;top:-9999px;opacity:0;font-size:16px;";
+    document.body.appendChild(inp); inp.focus(); inp.select(); inp.setSelectionRange(0,99999);
+    const ok=document.execCommand("copy"); document.body.removeChild(inp); if(ok)return true;
+  }catch{}
+  return false;
+}
+
+// ─── PREDICTION ENGINE ───
+const PREDICTION_MAP={0:'SMALL',1:'BIG',2:'SMALL',3:'BIG',4:'SMALL',5:'BIG',6:'BIG',7:'SMALL',8:'BIG',9:'SMALL'};
+let lastIssue="", currentActive=null, lossCount=0, winStreak=0;
+let history=[], totalWin=0, totalLoss=0, totalJackpot=0;
+let popupDismissTimer=null;
+
+function analyzeTrend(list){
+  const nums=list.slice(0,30).map(x=>parseInt(x.number));
+  const sizes=nums.map(n=>n>=5?'BIG':'SMALL');
+  const last10=sizes.slice(0,10);
+  const bigCount=sizes.filter(s=>s==='BIG').length;
+  const smallCount=sizes.length-bigCount;
+  const streakVal=sizes[0]; let streakLen=1;
+  for(let i=1;i<sizes.length;i++){ if(sizes[i]===streakVal)streakLen++; else break; }
+  let pattern='MIXED';
+  const isZigzag=last10.every((v,i)=>i===0||v!==last10[i-1]);
+  if(isZigzag)pattern='ZIGZAG';
+  else if(streakLen>=4)pattern='STREAK';
+  else if(bigCount>smallCount*1.5)pattern='BIG DOMINANT';
+  else if(smallCount>bigCount*1.5)pattern='SMALL DOMINANT';
+  let insight='';
+  if(streakLen>=4)insight=`${streakVal} streak ×${streakLen} — reversal likely`;
+  else if(isZigzag)insight='Alternating pattern detected';
+  else if(bigCount>smallCount)insight=`BIG dominant (${bigCount}/${sizes.length} recent)`;
+  else insight=`SMALL dominant (${smallCount}/${sizes.length} recent)`;
+  return {last10,bigCount,smallCount,streakVal,streakLen,pattern,insight,switchProb:0,zigzag:0,momentum:''};
+}
+
+function generatePrediction(list,period){
+  const recent=list.slice(0,15).map(x=>{const n=parseInt(x.number);return{num:n,size:n>=5?'BIG':'SMALL'};});
+  let sB=0,sS=0; const latest=recent[0].size;
+  for(let i=0;i<recent.length;i++){const w=recent.length-i; if(recent[i].size==='BIG')sB+=w; else sS+=w;}
+  let streak=1;
+  for(let i=1;i<recent.length;i++){if(recent[i].size===latest)streak++; else break;}
+  let mode='QUANTUM AI';
+  if(streak>=4){if(latest==='BIG')sS+=50; else sB+=50; mode='STREAK BREAKER';}
+  if(recent[0].size!==recent[1].size&&recent[1].size!==recent[2].size&&recent[2].size!==recent[3].size){
+    if(recent[0].size==='BIG')sB+=35; else sS+=35; mode='ULTRA ZIGZAG';
+  }
+  if(lossCount>=2){if(recent[0].size==='BIG')sS+=40; else sB+=40; mode='RECOVERY MODE';}
+  if(winStreak>=3){if(recent[0].size==='BIG')sB+=25; else sS+=25; mode='WIN BOOST';}
+  const ms=PREDICTION_MAP[recent[0].num];
+  if(ms==='BIG')sB+=15; else sS+=15;
+  const rawFin=sB>sS?'BIG':'SMALL';
+  const tot=sB+sS;
+  const conf=tot>0?Math.min(99,Math.max(51,Math.round((Math.max(sB,sS)/tot)*100))):75;
+  let fin=rawFin; if(conf<60){fin=rawFin==='BIG'?'SMALL':'BIG'; mode='REVERSE SIGNAL';}
+  const pool=fin==='BIG'?[5,6,7,8,9]:[0,1,2,3,4];
+  const n1=pool[Math.floor(Math.random()*pool.length)];
+  currentActive={period,size:fin,n1};
+  return{result:fin,n1,conf,mode:`MODE : ${mode}`};
+}
+
+async function fetchWinGoData(){
+  try{
+    const res=await fetch(`https://draw.ar-lottery01.com/WinGo/WinGo_1M/GetHistoryIssuePage.json?t=${Date.now()}`);
+    const data=await res.json();
+    return data?.data?.list??null;
+  }catch{return null;}
+}
+
+// ─── POPUP ───
+function spawnParticles(popup,type){
+  if(type==="LOSS")return;
+  const container=popup.querySelector(".popup-particles"); if(!container)return;
+  const colors=type==="JACKPOT"?["#ffe600","#ffb800","#fff7a0","#ffd700","#ff8800"]:["#00ff88","#00cc6a","#7fffcf","#ffffff","#38bdf8"];
+  for(let i=0;i<22;i++){
+    const p=document.createElement("div"); p.className="particle";
+    p.style.cssText=`left:${Math.random()*100}%;top:${-10-Math.random()*20}px;background:${colors[Math.floor(Math.random()*colors.length)]};width:${4+Math.random()*6}px;height:${4+Math.random()*6}px;border-radius:${Math.random()>.5?"50%":"2px"};animation-duration:${1.2+Math.random()*1.8}s;animation-delay:${Math.random()*.6}s;`;
+    container.appendChild(p);
+  }
+}
+function showResultPopup(status,periodNum,actualNumber,predictedSize){
+  const existing=document.getElementById("result-popup-overlay"); if(existing)existing.remove();
+  if(popupDismissTimer)clearTimeout(popupDismissTimer);
+  const period3=String(periodNum).slice(-3);
+  const isJackpot=status==="JACKPOT", isWin=status==="WIN"||isJackpot;
+  const cls=isJackpot?"popup-jackpot":isWin?"popup-win":"popup-loss";
+  const statusText=isJackpot?"JACKPOT":isWin?"WIN":"LOSS";
+  const icon=isJackpot?"🏆":isWin?"✅":"❌";
+  const subtitle=isJackpot?"EXACT NUMBER HIT!":isWin?"PREDICTION CORRECT":"PREDICTION WRONG";
+  const actualSize=actualNumber>=5?"BIG":"SMALL";
+  const dismissLabel=isJackpot?"JACKPOT! COLLECT YOUR WIN":isWin?"GREAT! NEXT ROUND":"TRY AGAIN NEXT ROUND";
+  const overlay=document.createElement("div");
+  overlay.id="result-popup-overlay"; overlay.className="result-popup-overlay";
+  overlay.innerHTML=`<div class="result-popup ${cls}">
+    <div class="popup-glow"></div><div class="popup-shine"></div><div class="popup-particles"></div>
+    <div style="text-align:center;margin-bottom:4px">
+      <div class="popup-period-badge"><svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M13 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-7-7V3zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg> PERIOD ···${period3}</div>
+    </div>
+    <span class="popup-status-icon">${icon}</span>
+    <div class="popup-status-text">${statusText}</div>
+    <div class="popup-subtitle">${subtitle}</div>
+    <div class="popup-result-row">
+      <div class="popup-result-box"><div class="popup-result-box-label">PERIOD</div><div class="popup-period-digits">···${period3}</div></div>
+      <div>
+        <div class="popup-result-box-val-label" style="text-align:center;margin-bottom:6px">NUMBER</div>
+        <div class="popup-number-ball">${actualNumber}</div>
+        <div style="text-align:center;margin-top:8px"><div class="popup-size-text">${actualSize}</div></div>
+      </div>
+      <div class="popup-result-box">
+        <div class="popup-result-box-label">PREDICT</div>
+        <div style="font-size:20px;font-weight:900;letter-spacing:1px;color:${isWin?"#00ff88":"#ff2b55"}">${predictedSize}</div>
+        <div style="margin-top:8px;font-size:10px;font-weight:900;letter-spacing:2px;color:${isWin?"rgba(0,255,136,.5)":"rgba(255,43,85,.5)"}">${isWin?"CORRECT":"WRONG"}</div>
+      </div>
+    </div>
+    <button class="popup-dismiss" onclick="dismissResultPopup()">${dismissLabel}</button>
+    <div class="popup-timer-bar"><div class="popup-timer-fill"></div></div>
+  </div>`;
+  document.getElementById("root").appendChild(overlay);
+  spawnParticles(overlay.querySelector(".result-popup"),statusText);
+  overlay.addEventListener("click",function(e){if(e.target===overlay)dismissResultPopup();});
+  popupDismissTimer=setTimeout(dismissResultPopup,5000);
+}
+function dismissResultPopup(){
+  if(popupDismissTimer){clearTimeout(popupDismissTimer);popupDismissTimer=null;}
+  const overlay=document.getElementById("result-popup-overlay"); if(!overlay)return;
+  const popup=overlay.querySelector(".result-popup");
+  overlay.classList.add("hiding"); if(popup)popup.classList.add("hiding");
+  setTimeout(()=>{const el=document.getElementById("result-popup-overlay");if(el)el.remove();},320);
+}
+
+// ─── RENDER FUNCTIONS ───
+let activeView='home', isLoggedIn=false;
+
+function renderTimer(){
+  const s=new Date().getSeconds();
+  return '00:'+String(60-s).padStart(2,'0');
+}
+
+function renderLoginScreen(){
+  return `<div class="ls2-screen">
+  <div class="ls2-bg-grid"></div>
+  <div class="ls2-orb ls2-orb-1"></div><div class="ls2-orb ls2-orb-2"></div><div class="ls2-orb ls2-orb-3"></div>
+  <div class="ls2-header">
+    <div class="ls2-badge-row">
+      <span class="ls2-badge"><span class="ls2-badge-dot"></span>LIVE SERVER</span>
+      <span class="ls2-badge ls2-badge-vip">⚡ VIP ACCESS</span>
+    </div>
+    <div class="ls2-logo">
+      <div class="ls2-logo-hex">
+        <svg viewBox="0 0 48 48" fill="none" width="44" height="44">
+          <polygon points="24,4 44,14 44,34 24,44 4,34 4,14" fill="none" stroke="var(--p1)" stroke-width="1.5" stroke-linejoin="round" opacity=".4"/>
+          <polygon points="24,10 38,18 38,30 24,38 10,30 10,18" fill="rgba(var(--p1r),var(--p1g),var(--p1b),.1)" stroke="var(--p1)" stroke-width="1.2" stroke-linejoin="round"/>
+          <path d="M20 16l-4 10h7l-3 10 10-12h-7l3-8z" fill="var(--p1)"/>
+        </svg>
+      </div>
+      <div class="ls2-logo-text">
+        <div class="ls2-name">HIMANSHU BHAI</div>
+        <div class="ls2-dev">@Himanshu_bhai_98</div>
+      </div>
+    </div>
+    <div class="ls2-tagline">QUANTUM AI PREDICTION ENGINE</div>
+  </div>
+  <div class="ls2-card">
+    <div class="ls2-card-top-bar"></div>
+    <div class="ls2-stats-row">
+      <div class="ls2-stat"><div class="ls2-stat-val">98.7%</div><div class="ls2-stat-lbl">ACCURACY</div></div>
+      <div class="ls2-stat-div"></div>
+      <div class="ls2-stat"><div class="ls2-stat-val">VIP</div><div class="ls2-stat-lbl">PLAN</div></div>
+      <div class="ls2-stat-div"></div>
+      <div class="ls2-stat"><div class="ls2-stat-val">1M</div><div class="ls2-stat-lbl">WIN-GO</div></div>
+    </div>
+    <div class="ls2-divider"></div>
+    <div class="ls2-device-section">
+      <div class="ls2-device-header">
+        <div class="ls2-device-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M17 1H7C5.9 1 5 1.9 5 3v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zm0 18H7V5h10v14zM12 18c.83 0 1.5-.67 1.5-1.5S12.83 15 12 15s-1.5.67-1.5 1.5.67 1.5 1.5 1.5z"/></svg></div>
+        <span class="ls2-device-title">DEVICE ID</span>
+        <span class="ls2-secure-pill"><svg viewBox="0 0 24 24" fill="currentColor" width="8" height="8"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg> ENCRYPTED</span>
+      </div>
+      <div class="ls2-device-id-box">
+        <div class="ls2-device-id">${DEVICE_ID}</div>
+        <button class="ls2-copy-btn" onclick="copyDeviceId(this)" title="Copy">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="ls2-status" id="login-status" style="display:none"></div>
+    <button class="ls2-activate-btn" id="activate-btn" onclick="handleAuth()">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+      ACTIVATE VIP ACCESS
+    </button>
+    <a href="https://t.me/+3vcmTHzdabYxMzU9" class="ls2-tg-btn" target="_blank">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M9.993 15.674 9.62 20.93c.53 0 .76-.227 1.037-.5l2.49-2.37 5.16 3.777c.947.522 1.614.247 1.87-.87l3.39-15.87c.302-1.406-.508-1.956-1.43-1.613L2.29 10.87c-1.356.53-1.336 1.286-.232 1.624l5.08 1.585L18.94 6.64c.556-.368 1.062-.164.646.204"/></svg>
+      GET SUBSCRIPTION ON TELEGRAM
+    </a>
+  </div>
+  <div class="ls2-footer">SECURED BY FIREBASE • END-TO-END ENCRYPTED</div>
+</div>`;
+}
+
+function renderHomeView(pred){
+  const {result,n1,conf,mode,period,trendData}=pred;
+  const zM=conf>=51&&conf<65, zS=conf>=65&&conf<80, zU=conf>=80;
+  const confLevel=zU?'ULTRA':zS?'STRONG':zM?'MODERATE':'SCANNING';
+  const confColor=zU?'#00ff88':zS?'var(--p1)':zM?'#fbbf24':'rgba(255,255,255,.3)';
+  const sizeHint=n1!==null?(n1>=5?'BIG':'SMALL'):'';
+  let trendHtml=`<div class="hv2-trend-card"><div class="hv2-trend-header"><span class="hv2-trend-title">LIVE TREND ANALYSIS</span><span class="hv2-trend-time">LOADING...</span></div></div>`;
+  if(trendData){
+    const {last10,bigCount,smallCount,streakVal,streakLen,pattern,insight}=trendData;
+    const bigPct=Math.round((bigCount/(bigCount+smallCount))*100);
+    const smallPct=100-bigPct;
+    const bubbles=last10.map(s=>`<span class="hv2-bubble ${s==='BIG'?'hv2-bubble-b':'hv2-bubble-s'}">${s==='BIG'?'B':'S'}</span>`).join('');
+    const t=new Date().toLocaleTimeString('en-US',{hour12:false});
+    trendHtml=`<div class="hv2-trend-card">
+      <div class="hv2-trend-header">
+        <span class="hv2-trend-title"><svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12" style="margin-right:6px"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>LIVE TREND ANALYSIS</span>
+        <span class="hv2-trend-time">${t}</span>
+      </div>
+      <div class="hv2-trend-section-lbl">LAST 10 RESULTS</div>
+      <div class="hv2-bubbles">${bubbles}</div>
+      <div class="hv2-ratio-bar"><div class="hv2-ratio-big" style="width:${bigPct}%"></div><div class="hv2-ratio-small" style="width:${smallPct}%"></div></div>
+      <div class="hv2-ratio-labels"><span style="color:#60a5fa">BIG ${bigPct}%</span><span style="color:#f87171">SMALL ${smallPct}%</span></div>
+      <div class="hv2-trend-stats">
+        <div class="hv2-tstat"><div class="hv2-tstat-lbl">STREAK</div><div class="hv2-tstat-val" style="color:${streakVal==='BIG'?'#60a5fa':'#f87171'}">${streakVal} ×${streakLen}</div></div>
+        <div class="hv2-tstat-sep"></div>
+        <div class="hv2-tstat"><div class="hv2-tstat-lbl">PATTERN</div><div class="hv2-tstat-val" style="color:var(--p1);font-size:11px">${pattern}</div></div>
+      </div>
+      <div class="hv2-insight"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--p1);flex-shrink:0;margin-top:1px"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg><span>${insight}</span></div>
+    </div>`;
+  }
+  return `<div class="hv2-wrap">
+  <div class="hv2-topbar">
+    <div class="hv2-topbar-left"><div class="hv2-brand">HIMANSHU BHAI</div><div class="hv2-sub">WIN-GO 1M PREDICTOR</div></div>
+    <div class="hv2-live-pill"><span class="live-dot-g"></span>LIVE</div>
+  </div>
+  <div class="hv2-info-row">
+    <div class="hv2-info-box">
+      <div class="hv2-info-lbl"><svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>NEXT PERIOD</div>
+      <div class="hv2-info-val">${period||'----'}</div>
+    </div>
+    <div class="hv2-info-sep"></div>
+    <div class="hv2-info-box hv2-info-box-right">
+      <div class="hv2-info-lbl"><svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>COUNTDOWN</div>
+      <div class="hv2-info-val hv2-timer" id="timer-val">${renderTimer()}</div>
+    </div>
+  </div>
+  <div class="hv2-pred-card">
+    <div class="hv2-pred-glow"></div>
+    <div class="hv2-pred-top-strip"></div>
+    <div class="hv2-mode-row"><span class="hv2-mode-dot"></span><span class="hv2-mode-text">${mode||'AI SERVER CONNECTED'}</span></div>
+    <div class="hv2-pred-body">
+      <div class="hv2-pred-left">
+        <div class="hv2-pred-signal-lbl">PREDICTION</div>
+        <div class="hv2-pred-result">${result||'WAIT'}</div>
+        <div class="hv2-pred-period-badge">PERIOD ${period||'----'}</div>
+      </div>
+      <div class="hv2-pred-divline"></div>
+      <div class="hv2-pred-right">
+        <div class="hv2-pred-signal-lbl">TARGET NO.</div>
+        <div class="hv2-pred-ball">${n1!==null?n1:'?'}</div>
+        <div class="hv2-pred-size-hint">${sizeHint}</div>
+      </div>
+    </div>
+    <div class="hv2-conf-strip"><div class="hv2-conf-strip-inner" style="width:${conf}%;background:${confColor}"></div></div>
+    <div class="hv2-conf-label-row">
+      <span style="color:${confColor};font-size:10px;font-weight:900;letter-spacing:2px">${confLevel}</span>
+      <span style="color:${confColor};font-size:10px;font-weight:900">${conf>0?conf+'%':'--'}</span>
+    </div>
+  </div>
+  <div class="hv2-zones-row">
+    <div class="hv2-zone ${zM?'hv2-zone-on-yellow':''}"><div class="hv2-zone-bar" style="${zM?'background:#fbbf24':''}"></div><span class="hv2-zone-name">MODERATE</span><span class="hv2-zone-pct">51–64%</span></div>
+    <div class="hv2-zone ${zS?'hv2-zone-on-blue':''}"><div class="hv2-zone-bar" style="${zS?'background:var(--p1)':''}"></div><span class="hv2-zone-name">STRONG</span><span class="hv2-zone-pct">65–79%</span></div>
+    <div class="hv2-zone ${zU?'hv2-zone-on-green':''}"><div class="hv2-zone-bar" style="${zU?'background:#00ff88':''}"></div><span class="hv2-zone-name">ULTRA</span><span class="hv2-zone-pct">80–99%</span></div>
+  </div>
+  ${trendHtml}
+</div>`;
+}
+
+function renderHistoryView(){
+  const total=totalWin+totalLoss;
+  const wr=total>0?Math.round((totalWin/total)*100):0;
+  const wrColor=wr>=70?'#00ff88':wr>=50?'var(--p1)':'#f87171';
+  const circumference=2*Math.PI*28;
+  const dash=circumference*(1-wr/100);
+  let rows='';
+  if(history.length===0){
+    rows=`<div class="hisv2-empty"><svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32" style="opacity:.2;margin-bottom:10px"><path d="M13 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-7-7V3zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>WAITING FOR RESULTS...</div>`;
+  } else {
+    rows=`<div class="hisv2-row-head"><span>PERIOD</span><span>NO.</span><span>PREDICT</span><span>STATUS</span></div>`;
+    history.forEach(it=>{
+      const cls=it.status==='JACKPOT'?'row-jackpot':it.status==='WIN'?'row-win':'row-loss';
+      const tag=it.status==='JACKPOT'?`<span class="htag htag-jackpot">🏆 JP</span>`:it.status==='WIN'?`<span class="htag htag-win">✅ WIN</span>`:`<span class="htag htag-loss">❌ LOSS</span>`;
+      rows+=`<div class="hisv2-row ${cls}"><span class="hisv2-cell-period">···${it.p}</span><span class="hisv2-cell-num">${it.num}</span><span class="hisv2-cell-pred">${it.s}</span><span class="hisv2-cell-status">${tag}</span></div>`;
+    });
+  }
+  return `<div class="hisv2-wrap">
+  <div class="hv2-topbar">
+    <div class="hv2-topbar-left"><div class="hv2-brand">HISTORY</div><div class="hv2-sub">SESSION PERFORMANCE</div></div>
+    <div class="hisv2-session-badge">SESSION</div>
+  </div>
+  <div class="hisv2-stats-row">
+    <div class="hisv2-stat-card hisv2-stat-win"><div class="hisv2-stat-icon">✅</div><div class="hisv2-stat-num">${totalWin}</div><div class="hisv2-stat-lbl">WIN</div></div>
+    <div class="hisv2-stat-card hisv2-stat-loss"><div class="hisv2-stat-icon">❌</div><div class="hisv2-stat-num">${totalLoss}</div><div class="hisv2-stat-lbl">LOSS</div></div>
+    <div class="hisv2-stat-card hisv2-stat-jackpot"><div class="hisv2-stat-icon">🏆</div><div class="hisv2-stat-num">${totalJackpot}</div><div class="hisv2-stat-lbl">JACKPOT</div></div>
+  </div>
+  <div class="hisv2-wr-card">
+    <div class="hisv2-wr-top-bar" style="background:linear-gradient(90deg,${wrColor},transparent)"></div>
+    <div class="hisv2-wr-body">
+      <div><div class="hisv2-wr-lbl">SESSION WIN RATE</div><div class="hisv2-wr-pct" style="color:${wrColor}">${wr}%</div><div class="hisv2-wr-meta">${totalWin}W · ${totalLoss}L · ${total} ROUNDS</div></div>
+      <svg width="72" height="72" viewBox="0 0 72 72">
+        <circle cx="36" cy="36" r="28" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="6"/>
+        <circle cx="36" cy="36" r="28" fill="none" stroke="${wrColor}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${circumference}" stroke-dashoffset="${dash}" transform="rotate(-90 36 36)" style="filter:drop-shadow(0 0 6px ${wrColor})"/>
+        <text x="36" y="40" text-anchor="middle" font-size="14" font-weight="900" fill="${wrColor}" font-family="Inter,sans-serif">${wr}%</text>
+      </svg>
+    </div>
+    <div class="hisv2-wr-bar-bg"><div class="hisv2-wr-bar-fill" style="width:${wr}%;background:${wrColor}"></div></div>
+  </div>
+  <div class="hisv2-list-card">
+    <div class="hisv2-list-header">
+      <span class="hisv2-list-title"><svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13" style="margin-right:6px"><path d="M13 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-7-7V3zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>LIVE RESULT HISTORY</span>
+      <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#00ff88;box-shadow:0 0 12px #00ff88;animation:blink 1s infinite"></span>
+    </div>
+    <div class="hisv2-rows">${rows}</div>
+  </div>
+</div>`;
+}
+
+function renderProfileView(){
+  return `<div>
+  <div class="topbar"><div class="brand-title">PROFILE</div><div class="online-badge">VIP</div></div>
+  <div class="profile-card">
+    <div class="profile-avatar-ring"><div class="profile-avatar"><img src="https://image-link.edgeone.app/1780894270116-3ogaek.jpg" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.style.display='none'"></div></div>
+    <div class="profile-name">VIP USER</div>
+    <div class="profile-badge">PREMIUM MEMBER</div>
+  </div>
+  <div class="profile-section-card">
+    <div class="profile-section-title">DEVICE ID</div>
+    <div class="profile-device-id">${DEVICE_ID}</div>
+    <button class="profile-copy-btn" id="prof-copy-btn" onclick="copyProfileId(this)">COPY ID</button>
+  </div>
+  <div class="profile-section-card">
+    <div class="profile-section-title">DEVELOPER</div>
+    <div class="profile-info-row">
+      <div class="profile-info-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M9.993 15.674 9.62 20.93c.53 0 .76-.227 1.037-.5l2.49-2.37 5.16 3.777c.947.522 1.614.247 1.87-.87l3.39-15.87c.302-1.406-.508-1.956-1.43-1.613L2.29 10.87c-1.356.53-1.336 1.286-.232 1.624l5.08 1.585L18.94 6.64c.556-.368 1.062-.164.646.204"/></svg></div>
+      <div class="profile-info-text">@MR_VIP_MAFIA_143</div>
+    </div>
+  </div>
+  <div class="profile-section-card">
+    <div class="profile-section-title">OFFICIAL CHANNEL</div>
+    <a href="https://t.me/+3vcmTHzdabYxMzU9" class="profile-channel-btn" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M9.993 15.674 9.62 20.93c.53 0 .76-.227 1.037-.5l2.49-2.37 5.16 3.777c.947.522 1.614.247 1.87-.87l3.39-15.87c.302-1.406-.508-1.956-1.43-1.613L2.29 10.87c-1.356.53-1.336 1.286-.232 1.624l5.08 1.585L18.94 6.64c.556-.368 1.062-.164.646.204"/></svg>JOIN TELEGRAM CHANNEL</a>
+  </div>
+</div>`;
+}
+
+function renderGameView(){
+  return `<div class="game-frame-container"><iframe src="https://91club.bet/" allow="fullscreen"></iframe></div>`;
+}
+
+function renderBottomNav(){
+  const tabs=[
+    {id:'home', icon:'<path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>',label:'HOME'},
+    {id:'history',icon:'<path d="M13 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-7-7V3zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>',label:'HISTORY'},
+    {id:'game',  icon:'<path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/>',label:'GAME'},
+    {id:'profile',icon:'<path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>',label:'PROFILE'},
+  ];
+  const items=tabs.map(t=>`<div class="nav-item${activeView===t.id?' active-nav':''}" onclick="setView('${t.id}')"><svg viewBox="0 0 24 24" fill="currentColor">${t.icon}</svg><span>${t.label}</span></div>`).join('');
+  return `<div class="bottom-nav">${items}<div class="theme-nav-btn" onclick="openThemeDrawer()"><div class="theme-ring"></div></div></div>`;
+}
+
+function renderThemeDrawer(){
+  const swatches=THEMES.map(t=>`
+    <div class="theme-swatch" onclick="selectTheme('${t.id}')">
+      <div class="swatch-circle${currentTheme===t.id?' active':''}" style="background:${t.swatch}"></div>
+      <span class="swatch-label${currentTheme===t.id?' active':''}">${t.label}</span>
+    </div>`).join('');
+  return `<div class="theme-overlay" id="theme-overlay" onclick="closeThemeDrawer()"></div>
+<div class="theme-drawer" id="theme-drawer">
+  <div class="drawer-handle"></div>
+  <div class="drawer-title">CHOOSE THEME</div>
+  <div class="theme-grid">${swatches}</div>
+</div>`;
+}
+
+// ─── STATE ───
+let predState={result:'',n1:null,conf:0,mode:'AI SERVER CONNECTED',period:'',trendData:null};
+
+function renderApp(){
+  const root=document.getElementById('root');
+  if(!isLoggedIn){root.innerHTML=renderLoginScreen();return;}
+  let viewHtml='';
+  if(activeView==='home')viewHtml=renderHomeView(predState);
+  else if(activeView==='history')viewHtml=renderHistoryView();
+  else if(activeView==='profile')viewHtml=renderProfileView();
+  else if(activeView==='game')viewHtml=renderGameView();
+  root.innerHTML=`<div class="ui-wrapper">${viewHtml}</div>${renderBottomNav()}${renderThemeDrawer()}`;
+}
+
+function setView(v){activeView=v;renderApp();}
+function openThemeDrawer(){document.getElementById('theme-overlay').classList.add('open');document.getElementById('theme-drawer').classList.add('open');}
+function closeThemeDrawer(){document.getElementById('theme-overlay').classList.remove('open');document.getElementById('theme-drawer').classList.remove('open');}
+function selectTheme(id){applyTheme(id);currentTheme=id;closeThemeDrawer();renderApp();}
+
+async function copyDeviceId(btn){
+  await safeCopy(DEVICE_ID);
+  btn.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+  btn.style.background='rgba(34,197,94,.15)'; btn.style.borderColor='rgba(34,197,94,.4)'; btn.style.color='#4ade80';
+  setTimeout(()=>{btn.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>';btn.style='';},2000);
+}
+async function copyProfileId(btn){
+  await safeCopy(DEVICE_ID);
+  btn.textContent='✓ COPIED!'; btn.style.background='linear-gradient(135deg,#22c55e,#16a34a)';
+  setTimeout(()=>{btn.textContent='COPY ID';btn.style='';},2000);
+}
+
+async function handleAuth(){
+  const btn=document.getElementById('activate-btn');
+  const statusEl=document.getElementById('login-status');
+  btn.disabled=true;
+  btn.innerHTML='<span class="ls2-spinner"></span>VERIFYING...';
+  statusEl.style.display='block'; statusEl.style.color='var(--p1)'; statusEl.textContent='VERIFYING DEVICE...';
+  try{
+    const snap=await db.ref('keys/'+DEVICE_ID).get();
+    const kd=snap.val();
+    if(kd){
+      if(kd.expiry!=='PERMANENT'&&Date.now()>kd.expiry){
+        statusEl.style.color='#fb7185'; statusEl.textContent='DEVICE ACCESS EXPIRED'; btn.disabled=false;
+        btn.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>ACTIVATE VIP ACCESS';
+      } else {
+        statusEl.style.color='#4ade80'; statusEl.textContent='ACCESS GRANTED ✓';
+        setTimeout(()=>{isLoggedIn=true;renderApp();startEngine();},1000);
+      }
+    } else {
+      statusEl.style.color='#fb7185'; statusEl.textContent='UNAUTHORIZED DEVICE'; btn.disabled=false;
+      btn.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>ACTIVATE VIP ACCESS';
+    }
+  } catch {
+    statusEl.style.color='#fb7185'; statusEl.textContent='SERVER ERROR — TRY AGAIN'; btn.disabled=false;
+    btn.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>ACTIVATE VIP ACCESS';
+  }
+}
+
+// ─── ENGINE ───
+function startEngine(){
+  setInterval(()=>{
+    const el=document.getElementById('timer-val');
+    if(el){const s=new Date().getSeconds();el.textContent='00:'+String(60-s).padStart(2,'0');}
+  },1000);
+
+  async function mainEngine(){
+    const list=await fetchWinGoData(); if(!list||list.length===0)return;
+    const latest=list[0], issue=latest.issueNumber;
+    if(lastIssue!==''&&lastIssue!==issue&&currentActive){
+      const num=parseInt(latest.number), actual=num>=5?'BIG':'SMALL', ca=currentActive;
+      const jackpot=num===ca.n1, win=actual===ca.size;
+      let status;
+      if(jackpot){status='JACKPOT';lossCount=0;winStreak++;totalWin++;totalJackpot++;history.unshift({p:issue.slice(-4),num,s:ca.size,status:'JACKPOT'});}
+      else if(win){status='WIN';lossCount=0;winStreak++;totalWin++;history.unshift({p:issue.slice(-4),num,s:ca.size,status:'WIN'});}
+      else{status='LOSS';lossCount++;winStreak=0;totalLoss++;history.unshift({p:issue.slice(-4),num,s:ca.size,status:'LOSS'});}
+      if(history.length>100)history.length=100;
+      showResultPopup(status,issue,num,ca.size);
+      if(activeView==='history')renderApp();
+    }
+    lastIssue=issue;
+    const nextPrd=(BigInt(issue)+1n).toString();
+    if(!currentActive||currentActive.period!==nextPrd){
+      const pred=generatePrediction(list,nextPrd);
+      predState={...predState,...pred,period:nextPrd.slice(-4)};
+      if(activeView==='home')renderApp();
+    }
+  }
+
+  async function trendEngine(){
+    const list=await fetchWinGoData(); if(!list)return;
+    predState.trendData=analyzeTrend(list);
+    if(activeView==='home')renderApp();
+  }
+
+  mainEngine(); trendEngine();
+  setInterval(mainEngine,2500);
+  setInterval(trendEngine,5000);
+}
+
+// ─── BOOT ───
+renderApp();
+</script>
+</body>
+</html>
